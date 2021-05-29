@@ -2,49 +2,59 @@
 #include "utility/homekit_drv.h"
 #include "ArduinoHomekit.h"
 
-
-HomekitClass::HomekitClass() : _timeout(50000)
-{  
-}
-
-void HomekitClass::init() {
+void HomekitClass::drvInit()
+{
     HomekitDrv::HomekitDriverInit();
 }
 
-const char* HomekitClass::getFwVersion() {
-	return HomekitDrv::getFwVersion();
+const char *HomekitClass::getHKVersion()
+{
+    return HomekitDrv::getHKVersion();
 }
 
-int HomekitClass::init(const char* sn, const char* name, const char* code, const char* setupId) {
-    return HomekitDrv::init(sn, strlen(sn), name, strlen(name), code, strlen(code), setupId, strlen(setupId));
+int HomekitClass::init()
+{
+    return HomekitDrv::init();
 }
 
-int HomekitClass::updateService(uint8_t addr, uint8_t id, uint8_t state, const char* name) {
-    return HomekitDrv::updateServices(addr, id, state, name, strlen(name));
+int HomekitClass::create(const char *sn, const char *name)
+{
+    return HomekitDrv::create(sn, strlen(sn), name, strlen(name));
 }
 
-int HomekitClass::begin() {
+int HomekitClass::addService(uint8_t addr, uint8_t id, uint8_t state, const char *name)
+{
+    return HomekitDrv::addService(addr, id, state, name, strlen(name));
+}
+
+int HomekitClass::begin()
+{
     return HomekitDrv::begin();
 }
 
-int HomekitClass::setState(uint8_t addr, uint8_t id, uint8_t state) {
-    return HomekitDrv::setState(addr, id, state);
+int HomekitClass::setServiceValue(uint8_t addr, uint8_t id, uint8_t state)
+{
+    return HomekitDrv::setServiceValue(addr, id, state);
 }
 
-int HomekitClass::getState(uint8_t addr, uint8_t id) {
-    return HomekitDrv::getState(addr, id);
+int HomekitClass::getServiceValue(uint8_t addr, uint8_t id)
+{
+    return HomekitDrv::getServiceValue(addr, id);
 }
 
-int HomekitClass::getTriggerState(uint8_t addr, uint8_t id) {
-    return HomekitDrv::getTriggerState(addr, id);
+int HomekitClass::getServiceTriggered(uint8_t addr, uint8_t id)
+{
+    return HomekitDrv::getServiceTriggered(addr, id);
 }
 
-int HomekitClass::cleanModules() {
-    return HomekitDrv::cleanModules();
+int HomekitClass::deleateAccessory()
+{
+    return HomekitDrv::deleateAccessory();
 }
 
-int HomekitClass::destroy() {
-    return HomekitDrv::destroy();
+int HomekitClass::resetToFactory()
+{
+    return HomekitDrv::resetToFactory();
 }
 
 HomekitClass Homekit;
