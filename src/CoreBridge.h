@@ -7,6 +7,7 @@
 
 enum
 {
+  COREBRIDGE_RESET_NETWORK_CMD = 0x1e,
   COREBRIDGE_RESET_TO_FACTORY_CMD = 0x1f,
 };
 
@@ -16,6 +17,8 @@ public:
   void begin();
 
   void end();
+
+  int resetNetwork();
 
   int resetToFactory();
 };
