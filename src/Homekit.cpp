@@ -144,18 +144,17 @@ int HomekitClass::deleteAccessory()
   return _data;
 }
 
-int HomekitClass::addService(uint8_t addr, uint8_t id, uint8_t state, const char *name)
+int HomekitClass::addService(uint8_t addr, uint8_t state, const char *name)
 {
   WAIT_FOR_SLAVE_SELECT();
   // Send Command
-  SpiDrv::sendCmd(HOMEKIT_ADD_SERVICE_CMD, PARAM_NUMS_4);
+  SpiDrv::sendCmd(HOMEKIT_ADD_SERVICE_CMD, PARAM_NUMS_3);
   SpiDrv::sendParam(&addr, sizeof(addr), NO_LAST_PARAM);
-  SpiDrv::sendParam(&id, sizeof(id), NO_LAST_PARAM);
   SpiDrv::sendParam(&state, 1, NO_LAST_PARAM);
   SpiDrv::sendParam((uint8_t *)name, strlen(name), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr) + sizeof(id) + strlen(name);
+  int commandSize = 6 + sizeof(addr) + strlen(name);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -176,17 +175,16 @@ int HomekitClass::addService(uint8_t addr, uint8_t id, uint8_t state, const char
   return _data;
 }
 
-int HomekitClass::setServiceValue(uint8_t addr, uint8_t id, uint8_t state)
+int HomekitClass::setServiceValue(uint8_t addr, uint8_t state)
 {
   WAIT_FOR_SLAVE_SELECT();
   // Send Command
-  SpiDrv::sendCmd(HOMEKIT_SET_SERVICE_VALUE_CMD, PARAM_NUMS_3);
+  SpiDrv::sendCmd(HOMEKIT_SET_SERVICE_VALUE_CMD, PARAM_NUMS_2);
   SpiDrv::sendParam(&addr, sizeof(addr), NO_LAST_PARAM);
-  SpiDrv::sendParam(&id, sizeof(id), NO_LAST_PARAM);
   SpiDrv::sendParam(&state, 1, LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 7 + sizeof(addr) + sizeof(id);
+  int commandSize = 7 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -207,16 +205,15 @@ int HomekitClass::setServiceValue(uint8_t addr, uint8_t id, uint8_t state)
   return _data;
 }
 
-int HomekitClass::getServiceValue(uint8_t addr, uint8_t id)
+int HomekitClass::getServiceValue(uint8_t addr)
 {
   WAIT_FOR_SLAVE_SELECT();
   // Send Command
-  SpiDrv::sendCmd(HOMEKIT_GET_SERVICE_VALUE_CMD, PARAM_NUMS_2);
-  SpiDrv::sendParam(&addr, sizeof(addr), NO_LAST_PARAM);
-  SpiDrv::sendParam(&id, sizeof(id), LAST_PARAM);
+  SpiDrv::sendCmd(HOMEKIT_GET_SERVICE_VALUE_CMD, PARAM_NUMS_1);
+  SpiDrv::sendParam(&addr, sizeof(addr), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr) + sizeof(id);
+  int commandSize = 6 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -237,16 +234,15 @@ int HomekitClass::getServiceValue(uint8_t addr, uint8_t id)
   return _data;
 }
 
-int HomekitClass::readServiceTriggered(uint8_t addr, uint8_t id)
+int HomekitClass::readServiceTriggered(uint8_t addr)
 {
   WAIT_FOR_SLAVE_SELECT();
   // Send Command
-  SpiDrv::sendCmd(HOMEKIT_READ_SERVICE_TRIGGERED_CMD, PARAM_NUMS_2);
-  SpiDrv::sendParam(&addr, sizeof(addr), NO_LAST_PARAM);
-  SpiDrv::sendParam(&id, sizeof(id), LAST_PARAM);
+  SpiDrv::sendCmd(HOMEKIT_READ_SERVICE_TRIGGERED_CMD, PARAM_NUMS_1);
+  SpiDrv::sendParam(&addr, sizeof(addr), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr) + sizeof(id);
+  int commandSize = 6 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
