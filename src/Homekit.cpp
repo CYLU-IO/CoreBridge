@@ -154,7 +154,7 @@ int HomekitClass::addService(uint8_t addr, uint8_t state, const char *name)
   SpiDrv::sendParam((uint8_t *)name, strlen(name), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr) + strlen(name);
+  int commandSize = 7 + sizeof(addr) + sizeof(state) + strlen(name);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -184,7 +184,7 @@ int HomekitClass::setServiceValue(uint8_t addr, uint8_t state)
   SpiDrv::sendParam(&state, 1, LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 7 + sizeof(addr);
+  int commandSize = 6 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -213,7 +213,7 @@ int HomekitClass::getServiceValue(uint8_t addr)
   SpiDrv::sendParam(&addr, sizeof(addr), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr);
+  int commandSize = 5 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
@@ -242,7 +242,7 @@ int HomekitClass::readServiceTriggered(uint8_t addr)
   SpiDrv::sendParam(&addr, sizeof(addr), LAST_PARAM);
 
   // pad to multiple of 4
-  int commandSize = 6 + sizeof(addr);
+  int commandSize = 5 + sizeof(addr);
   while (commandSize % 4)
   {
     SpiDrv::readChar();
