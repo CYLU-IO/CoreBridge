@@ -11,9 +11,11 @@ enum
   COREBRIDGE_RESET_TO_FACTORY_CMD = 0x1f,
 
   COREBRIDGE_ADD_MODULE_CMD = 0x23,
-  COREBRIDGE_GET_MODULE_VALUE_CMD = 0x24,
-  COREBRIDGE_SET_MODULE_VALUE_CMD = 0x25,
-  COREBRIDGE_READ_MODULE_TRIGGERED_CMD = 0x26,
+  COREBRIDGE_SET_MODULE_SWITCH_STATE_CMD = 0x24,
+  COREBRIDGE_GET_MODULE_SWITCH_STATE_CMD = 0x25,
+  COREBRIDGE_SET_MODULE_CURRENT_CMD = 0x26,
+  COREBRIDGE_GET_MODULE_PRIORITY_CMD = 0x27,
+  COREBRIDGE_READ_MODULE_TRIGGERED_CMD = 0x28,
 };
 
 class CoreBridgeClass
@@ -26,9 +28,14 @@ public:
   int countAccessory();
   int beginAccessory();
 
-  int addModule(uint8_t index, uint8_t state, const char *name);
-  int getModuleValue(uint8_t index);
-  int setModuleValue(uint8_t index, uint8_t state);
+  int addModule(uint8_t index, const char *name, uint8_t type, uint8_t priority, uint8_t state);
+  int getModuleSwitchState(uint8_t index);
+  int setModuleSwitchState(uint8_t index, uint8_t state);
+
+  int setModuleCurrent(uint8_t index, uint8_t v_low_byte, uint8_t v_high_byte);
+
+  int getModulePriority(uint8_t index);
+
   int readModuleTriggered(uint8_t index);
 
   int resetNetwork();
