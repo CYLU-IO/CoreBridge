@@ -4,6 +4,7 @@
 #include "WifiMgr.h"
 #include "Homekit.h"
 #include "MqttCtrl.h"
+#include "Warehouse.h"
 
 enum
 {
