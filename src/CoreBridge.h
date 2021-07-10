@@ -8,6 +8,8 @@
 
 enum
 {
+  COREBRIDGE_GET_ENABLE_POP = 0x00,
+
   COREBRIDGE_RESET_NETWORK_CMD = 0x1e,
   COREBRIDGE_RESET_TO_FACTORY_CMD = 0x1f,
 
@@ -24,6 +26,8 @@ class CoreBridgeClass
 public:
   void begin();
   void end();
+
+  int getEnablePOP();
 
   int createAccessory();
   int countAccessory();

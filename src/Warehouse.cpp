@@ -7,9 +7,14 @@ void WarehouseClass::begin()
   Wire.begin();
 }
 
-void WarehouseClass::write(int val, int address, int ADDR)
+int WarehouseClass::getHeadAddr()
 {
-  Wire.beginTransmission(ADDR);
+  return 0;
+}
+
+void WarehouseClass::write(int val, int address)
+{
+  Wire.beginTransmission(EEPROM_I2C_ADDR);
   Wire.write((int)(address >> 8));   // MSB
   Wire.write((int)(address & 0xff)); // LSB
 
@@ -17,20 +22,20 @@ void WarehouseClass::write(int val, int address, int ADDR)
   Wire.endTransmission();
 }
 
-int WarehouseClass::read(int address, int ADDR)
+int WarehouseClass::read(int address)
 {
-  char rData = 0xff;
+  char re = 0xff;
 
-  Wire.beginTransmission(ADDR);
+  Wire.beginTransmission(EEPROM_I2C_ADDR);
   Wire.write((int)(address >> 8));   // MSB
   Wire.write((int)(address & 0xff)); // LSB
   Wire.endTransmission();
 
-  Wire.requestFrom(ADDR, 1);
+  Wire.requestFrom(EEPROM_I2C_ADDR, 1);
 
-  rData = Wire.read();
+  re = Wire.read();
 
-  return rData;
+  return re;
 }
 
 WarehouseClass Warehouse;

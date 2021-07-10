@@ -13,6 +13,26 @@ void CoreBridgeClass::end()
     SpiDrv::end();
 }
 
+int CoreBridgeClass::getEnablePOP()
+{
+    WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(COREBRIDGE_GET_ENABLE_POP, PARAM_NUMS_0);
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 0;
+    uint8_t _dataLen = 0;
+    SpiDrv::waitResponseCmd(COREBRIDGE_GET_ENABLE_POP, PARAM_NUMS_1, &_data, &_dataLen);
+    SpiDrv::spiSlaveDeselect();
+
+    return _data;
+}
+
 int CoreBridgeClass::createAccessory()
 {
     return Homekit.createAccessory();
