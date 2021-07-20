@@ -10,17 +10,19 @@ class WarehouseClass
 private:
   void write(int val, int addr);
   int read(int addr);
+  int readAsInt16(int addr);
 
 public:
   void begin();
 
   int getHeadAddr();
   int setHeadAddr(int addr);
+  int getAvailableLength();
 
   int appendData(int value);
   void getDataPack(int addr, int amount, int *buffer);
 
-  int clearStorage();
+  void clearStorage();
 };
 
 extern WarehouseClass Warehouse;

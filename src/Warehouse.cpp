@@ -10,7 +10,7 @@ void WarehouseClass::begin()
 
 int WarehouseClass::getHeadAddr()
 {
-  return (this->read(EEPROM_HEAD_ADDR) & 0xff) | this->read(EEPROM_HEAD_ADDR + 1) << 8;
+  return this->readAsInt16(EEPROM_HEAD_ADDR);
 }
 
 int WarehouseClass::setHeadAddr(int addr)
@@ -21,9 +21,16 @@ int WarehouseClass::setHeadAddr(int addr)
   return addr;
 }
 
+int WarehouseClass::getAvailableLength()
+{
+  return (this->getHeadAddr() / 2 ) + (this->readAsInt16((EEPROM_HEAD_ADDR + 2) + EEPROM_BUFFER_LEN) == 65535? 0: EEPROM_BUFFER_LEN / 2);
+}
+
 int WarehouseClass::appendData(int value)
 {
   int addr = this->getHeadAddr() + 2;
+
+  if (addr > EEPROM_BUFFER_LEN + (EEPROM_HEAD_ADDR + 2)) addr = EEPROM_HEAD_ADDR + 2;
 
   this->write(value & 0xff, addr);
   this->write((value >> 8) & 0xff, addr + 1);
@@ -38,24 +45,20 @@ void WarehouseClass::getDataPack(int addr, int amount, int *buffer)
   //amount: 144
   for (int i = 0; i < amount; i++)
   {
-    if (head_addr / 2 <= i)
-      addr = EEPROM_BUFFER_LEN / 2 + (EEPROM_HEAD_ADDR + 2);
+    if (head_addr / 2 <= i) addr = EEPROM_BUFFER_LEN / 2 + (EEPROM_HEAD_ADDR + 2);
 
-    int low_byte_addr = addr - (i * 2);
-    int high_byte_addr = addr + 1 - (i * 2);
-
-    buffer[i] = (this->read(low_byte_addr) & 0xff) | this->read(high_byte_addr) << 8;
+    buffer[i] = this->readAsInt16(addr - (i * 2));
   }
 }
 
-int WarehouseClass::clearStorage()
+void WarehouseClass::clearStorage()
 {
-  for (int i = 0; i < EEPROM_BUFFER_LEN / 2 + (EEPROM_HEAD_ADDR + 2); i++)
+  for (int i = 0; i <= EEPROM_BUFFER_LEN + 1 + (EEPROM_HEAD_ADDR + 2); i++)
   {
     this->write(0xff, i);
   }
 
-  return this->setHeadAddr(EEPROM_HEAD_ADDR + 2);
+  this->setHeadAddr(0x00);
 }
 
 void WarehouseClass::write(int val, int addr)
@@ -85,6 +88,11 @@ int WarehouseClass::read(int addr)
     re = Wire.read();
 
   return re;
+}
+
+int WarehouseClass::readAsInt16(int addr)
+{
+  return (this->read(addr) & 0xff) | this->read(addr + 1) << 8;
 }
 
 WarehouseClass Warehouse;

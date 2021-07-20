@@ -19,6 +19,10 @@ enum
   COREBRIDGE_SET_MODULE_CURRENT_CMD = 0x26,
   COREBRIDGE_GET_MODULE_PRIORITY_CMD = 0x27,
   COREBRIDGE_READ_MODULE_TRIGGERED_CMD = 0x28,
+
+  COREBRIDGE_READ_WAREHOUSE_REQUEST = 0x30,
+  COREBRIDGE_SET_WAREHOUSE_LENGTH = 0x31,
+  COREBRIDGE_SET_WAREHOUSE_BUFFER = 0x32,
 };
 
 class CoreBridgeClass
@@ -42,6 +46,9 @@ public:
   int getModulePriority(uint8_t index);
 
   int readModuleTriggered(uint8_t index);
+
+  int readWarehouseRequest();
+  int setWarehouseLength(uint16_t length);
 
   int resetNetwork();
   int resetToFactory();
