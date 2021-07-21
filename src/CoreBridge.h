@@ -49,6 +49,7 @@ public:
 
   int readWarehouseRequest();
   int setWarehouseLength(uint16_t length);
+  int setWarehouseBuffer(uint16_t *buffer, uint8_t length);
 
   int resetNetwork();
   int resetToFactory();

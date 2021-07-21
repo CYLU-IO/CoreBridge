@@ -20,7 +20,7 @@ public:
   int getAvailableLength();
 
   int appendData(int value);
-  void getDataPack(int addr, int amount, int *buffer);
+  void getDataPack(int addr, int &amount, int *buffer);
 
   void clearStorage();
 };

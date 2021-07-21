@@ -38,9 +38,12 @@ int WarehouseClass::appendData(int value)
   return this->setHeadAddr(addr);
 }
 
-void WarehouseClass::getDataPack(int addr, int amount, int *buffer)
+void WarehouseClass::getDataPack(int addr, int &amount, int *buffer)
 {
   int head_addr = this->getHeadAddr();
+  int warehouse_length = this->getAvailableLength();
+
+  if (amount > warehouse_length) amount = warehouse_length;
 
   //amount: 144
   for (int i = 0; i < amount; i++)

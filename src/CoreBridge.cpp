@@ -282,6 +282,35 @@ int CoreBridgeClass::setWarehouseLength(uint16_t length)
     return _data;
 }
 
+int CoreBridgeClass::setWarehouseBuffer(uint16_t *buffer, uint8_t length)
+{
+    WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(COREBRIDGE_SET_WAREHOUSE_BUFFER, PARAM_NUMS_1);
+    SpiDrv::sendBufferLen16(buffer, length, LAST_PARAM);
+
+    // pad to multiple of 4
+    int commandSize = 6;
+    while (commandSize % 4)
+    {
+        SpiDrv::readChar();
+        commandSize++;
+    }
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 0;
+    uint8_t _dataLen = 0;
+    SpiDrv::waitResponseCmd(COREBRIDGE_SET_WAREHOUSE_BUFFER, PARAM_NUMS_1, &_data, &_dataLen);
+    SpiDrv::spiSlaveDeselect();
+
+    return _data;
+}
+
 int CoreBridgeClass::resetNetwork()
 {
     WAIT_FOR_SLAVE_SELECT();
