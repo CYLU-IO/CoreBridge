@@ -241,12 +241,12 @@ int CoreBridgeClass::readWarehouseRequest()
     SpiDrv::spiSlaveSelect();
 
     // Wait for reply
-    uint8_t _data[2];
+    uint8_t _data = 0;
     uint8_t _dataLen = 0;
-    SpiDrv::waitResponseCmd(COREBRIDGE_READ_WAREHOUSE_REQUEST, PARAM_NUMS_1, _data, &_dataLen);
+    SpiDrv::waitResponseCmd(COREBRIDGE_READ_WAREHOUSE_REQUEST, PARAM_NUMS_1, &_data, &_dataLen);
     SpiDrv::spiSlaveDeselect();
 
-    return (_data[0] & 0xff) | _data[1] << 8;
+    return _data;
 }
 
 int CoreBridgeClass::setWarehouseLength(uint16_t length)

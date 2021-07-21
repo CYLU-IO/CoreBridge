@@ -54,6 +54,27 @@ void WarehouseClass::getDataPack(int addr, int &amount, int *buffer)
   }
 }
 
+void WarehouseClass::getDataByPage(int page, int &amount, int *buffer)
+{
+  int head_addr = this->getHeadAddr();
+  int warehouse_length = this->getAvailableLength();
+
+  int last_data_addr = 0x00;
+  if (warehouse_length * 2 > head_addr) {
+    last_data_addr = EEPROM_BUFFER_LEN - (warehouse_length * 2 - head_addr);
+  }
+
+  int constant_amount = amount;
+
+  if (warehouse_length - (constant_amount * page) < constant_amount) {
+    amount = warehouse_length - (constant_amount * page);
+  }
+
+  int target_addr = last_data_addr + (constant_amount * 2) + (constant_amount * 2 * (page - 1)) + (amount * 2);
+
+  this->getDataPack(target_addr, amount, buffer);
+}
+
 void WarehouseClass::clearStorage()
 {
   for (int i = 0; i <= EEPROM_BUFFER_LEN + 1 + (EEPROM_HEAD_ADDR + 2); i++)

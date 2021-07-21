@@ -21,6 +21,7 @@ public:
 
   int appendData(int value);
   void getDataPack(int addr, int &amount, int *buffer);
+  void getDataByPage(int page, int &amount, int *buffer);
 
   void clearStorage();
 };
