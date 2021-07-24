@@ -140,14 +140,13 @@ int CoreBridgeClass::setModuleSwitchState(uint8_t index, uint8_t state)
     return _data;
 }
 
-int CoreBridgeClass::setModuleCurrent(uint8_t index, uint8_t v_low_byte, uint8_t v_high_byte)
+int CoreBridgeClass::setModuleCurrent(uint8_t index, uint16_t value)
 {
     WAIT_FOR_SLAVE_SELECT();
     // Send Command
-    SpiDrv::sendCmd(COREBRIDGE_SET_MODULE_CURRENT_CMD, PARAM_NUMS_3);
+    SpiDrv::sendCmd(COREBRIDGE_SET_MODULE_CURRENT_CMD, PARAM_NUMS_2);
     SpiDrv::sendParam(&index, 1, NO_LAST_PARAM);
-    SpiDrv::sendParam(&v_low_byte, 1, NO_LAST_PARAM);
-    SpiDrv::sendParam(&v_high_byte, 1, LAST_PARAM);
+    SpiDrv::sendBufferLen16(&value, 1, LAST_PARAM);
 
     // pad to multiple of 4
     int commandSize = 9;
@@ -229,64 +228,11 @@ int CoreBridgeClass::readModuleTriggered(uint8_t index)
     return _data;
 }
 
-int CoreBridgeClass::readWarehouseRequest()
+int CoreBridgeClass::pushWarehouseBuffer(uint16_t *buffer, uint8_t length)
 {
     WAIT_FOR_SLAVE_SELECT();
     // Send Command
-    SpiDrv::sendCmd(COREBRIDGE_READ_WAREHOUSE_REQUEST, PARAM_NUMS_0);
-
-    SpiDrv::spiSlaveDeselect();
-    //Wait the reply elaboration
-    SpiDrv::waitForSlaveReady();
-    SpiDrv::spiSlaveSelect();
-
-    // Wait for reply
-    uint8_t _data = 0;
-    uint8_t _dataLen = 0;
-    SpiDrv::waitResponseCmd(COREBRIDGE_READ_WAREHOUSE_REQUEST, PARAM_NUMS_1, &_data, &_dataLen);
-    SpiDrv::spiSlaveDeselect();
-
-    return _data;
-}
-
-int CoreBridgeClass::setWarehouseLength(uint16_t length)
-{
-    uint8_t low_byte = length & 0xff;
-    uint8_t high_byte = (length >> 8) & 0xff;
-
-    WAIT_FOR_SLAVE_SELECT();
-    // Send Command
-    SpiDrv::sendCmd(COREBRIDGE_SET_WAREHOUSE_LENGTH, PARAM_NUMS_2);
-    SpiDrv::sendParam(&low_byte, 1, NO_LAST_PARAM);
-    SpiDrv::sendParam(&high_byte, 1, LAST_PARAM);
-
-    // pad to multiple of 4
-    int commandSize = 7;
-    while (commandSize % 4)
-    {
-        SpiDrv::readChar();
-        commandSize++;
-    }
-
-    SpiDrv::spiSlaveDeselect();
-    //Wait the reply elaboration
-    SpiDrv::waitForSlaveReady();
-    SpiDrv::spiSlaveSelect();
-
-    // Wait for reply
-    uint8_t _data = 0;
-    uint8_t _dataLen = 0;
-    SpiDrv::waitResponseCmd(COREBRIDGE_SET_WAREHOUSE_LENGTH, PARAM_NUMS_1, &_data, &_dataLen);
-    SpiDrv::spiSlaveDeselect();
-
-    return _data;
-}
-
-int CoreBridgeClass::setWarehouseBuffer(uint16_t *buffer, uint8_t length)
-{
-    WAIT_FOR_SLAVE_SELECT();
-    // Send Command
-    SpiDrv::sendCmd(COREBRIDGE_SET_WAREHOUSE_BUFFER, PARAM_NUMS_1);
+    SpiDrv::sendCmd(COREBRIDGE_PUSH_WAREHOUSE_BUFFER, PARAM_NUMS_1);
     SpiDrv::sendBufferLen16(buffer, length, LAST_PARAM);
 
     // pad to multiple of 4
@@ -305,7 +251,7 @@ int CoreBridgeClass::setWarehouseBuffer(uint16_t *buffer, uint8_t length)
     // Wait for reply
     uint8_t _data = 0;
     uint8_t _dataLen = 0;
-    SpiDrv::waitResponseCmd(COREBRIDGE_SET_WAREHOUSE_BUFFER, PARAM_NUMS_1, &_data, &_dataLen);
+    SpiDrv::waitResponseCmd(COREBRIDGE_PUSH_WAREHOUSE_BUFFER, PARAM_NUMS_1, &_data, &_dataLen);
     SpiDrv::spiSlaveDeselect();
 
     return _data;

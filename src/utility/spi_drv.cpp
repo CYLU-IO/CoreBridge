@@ -366,9 +366,10 @@ void SpiDrv::sendBufferLen16(uint16_t *param, uint8_t param_len, uint8_t lastPar
     sendParamLen16(param_len * 2);
 
     // Send Spi param data
-    for (i = 0; i < param_len * 2; ++i)
+    for (i = 0; i < param_len; ++i)
     {
-        spiTransfer(param[i]);
+        spiTransfer(param[i * 2] & 0xff);
+        spiTransfer((param[i * 2] >> 8) & 0xff);
     }
 
     // if lastParam==1 Send Spi END CMD

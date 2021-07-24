@@ -23,14 +23,15 @@ int WarehouseClass::setHeadAddr(int addr)
 
 int WarehouseClass::getAvailableLength()
 {
-  return (this->getHeadAddr() / 2 ) + (this->readAsInt16((EEPROM_HEAD_ADDR + 2) + EEPROM_BUFFER_LEN) == 65535? 0: EEPROM_BUFFER_LEN / 2);
+  return (this->getHeadAddr() / 2) + (this->readAsInt16((EEPROM_HEAD_ADDR + 2) + EEPROM_BUFFER_LEN) == 65535 ? 0 : EEPROM_BUFFER_LEN / 2);
 }
 
 int WarehouseClass::appendData(int value)
 {
   int addr = this->getHeadAddr() + 2;
 
-  if (addr > EEPROM_BUFFER_LEN + (EEPROM_HEAD_ADDR + 2)) addr = EEPROM_HEAD_ADDR + 2;
+  if (addr > EEPROM_BUFFER_LEN + (EEPROM_HEAD_ADDR + 2))
+    addr = EEPROM_HEAD_ADDR + 2;
 
   this->write(value & 0xff, addr);
   this->write((value >> 8) & 0xff, addr + 1);
@@ -43,12 +44,14 @@ void WarehouseClass::getDataPack(int addr, int &amount, int *buffer)
   int head_addr = this->getHeadAddr();
   int warehouse_length = this->getAvailableLength();
 
-  if (amount > warehouse_length) amount = warehouse_length;
+  if (amount > warehouse_length)
+    amount = warehouse_length;
 
   //amount: 144
   for (int i = 0; i < amount; i++)
   {
-    if (head_addr / 2 <= i) addr = EEPROM_BUFFER_LEN / 2 + (EEPROM_HEAD_ADDR + 2);
+    if (head_addr / 2 <= i)
+      addr = EEPROM_BUFFER_LEN / 2 + (EEPROM_HEAD_ADDR + 2);
 
     buffer[i] = this->readAsInt16(addr - (i * 2));
   }
@@ -60,13 +63,15 @@ void WarehouseClass::getDataByPage(int page, int &amount, int *buffer)
   int warehouse_length = this->getAvailableLength();
 
   int last_data_addr = 0x00;
-  if (warehouse_length * 2 > head_addr) {
+  if (warehouse_length * 2 > head_addr)
+  {
     last_data_addr = EEPROM_BUFFER_LEN - (warehouse_length * 2 - head_addr);
   }
 
   int constant_amount = amount;
 
-  if (warehouse_length - (constant_amount * page) < constant_amount) {
+  if (warehouse_length - (constant_amount * page) < constant_amount)
+  {
     amount = warehouse_length - (constant_amount * page);
   }
 
