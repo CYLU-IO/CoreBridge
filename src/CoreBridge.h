@@ -1,26 +1,10 @@
 #ifndef CoreBridge_h
 #define CoreBridge_h
 
-#include "WifiMgr.h"
-#include "Homekit.h"
-#include "MqttCtrl.h"
-#include "Warehouse.h"
-
 enum
 {
-  COREBRIDGE_GET_ENABLE_POP = 0x00,
-
-  COREBRIDGE_RESET_NETWORK_CMD = 0x1e,
-  COREBRIDGE_RESET_TO_FACTORY_CMD = 0x1f,
-
-  COREBRIDGE_ADD_MODULE_CMD = 0x23,
-  COREBRIDGE_SET_MODULE_SWITCH_STATE_CMD = 0x24,
-  COREBRIDGE_GET_MODULE_SWITCH_STATE_CMD = 0x25,
-  COREBRIDGE_SET_MODULE_CURRENT_CMD = 0x26,
-  COREBRIDGE_GET_MODULE_PRIORITY_CMD = 0x27,
-  COREBRIDGE_READ_MODULE_TRIGGERED_CMD = 0x28,
-
-  COREBRIDGE_PUSH_WAREHOUSE_BUFFER = 0x30,
+  COREBRIDGE_UART_RECEIVE = 0x00,
+  COREBRIDGE_UART_TRANSMIT = 0x01,
 };
 
 class CoreBridgeClass
@@ -29,7 +13,10 @@ public:
   void begin();
   void end();
 
-  int getEnablePOP();
+  int uartReceive(uint16_t length, uint8_t *buffer);
+  char *uartTransmit(uint8_t &port, uint16_t &length);
+
+  /*int getEnablePOP();
 
   int createAccessory();
   int countAccessory();
@@ -48,7 +35,7 @@ public:
   int pushWarehouseBuffer(uint16_t *buffer, uint8_t length);
 
   int resetNetwork();
-  int resetToFactory();
+  int resetToFactory();*/
 };
 
 extern CoreBridgeClass CoreBridge;

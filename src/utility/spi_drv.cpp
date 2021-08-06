@@ -325,6 +325,46 @@ int SpiDrv::waitResponseParams(uint8_t cmd, uint8_t numParam, tParam *params)
     return 1;
 }
 
+int SpiDrv::waitResponseDataParams(uint8_t cmd, uint8_t numParam, tDataParam *params)
+{
+    char _data = 0;
+    int i = 0, ii = 0;
+
+    IF_CHECK_START_CMD(_data)
+    {
+        CHECK_DATA(cmd | REPLY_FLAG, _data){};
+
+        uint8_t _numParam = readChar();
+        if (_numParam != 0)
+        {
+            for (i = 0; i < _numParam; ++i)
+            {
+                params[i].dataLen = readParamLen16();
+                params[i].data = (char *)malloc(params[i].dataLen * sizeof(char));
+                for (ii = 0; ii < params[i].dataLen; ++ii)
+                {
+                    // Get Params data
+                    params[i].data[ii] = spiTransfer(DUMMY_DATA);
+                }
+            }
+        }
+        else
+        {
+            WARN("Error numParam == 0");
+            return 0;
+        }
+
+        if (numParam != _numParam)
+        {
+            WARN("Mismatch numParam");
+            return 0;
+        }
+
+        readAndCheckChar(END_CMD, &_data);
+    }
+    return 1;
+}
+
 void SpiDrv::sendParamNoLen(uint8_t *param, size_t param_len, uint8_t lastParam)
 {
     size_t i = 0;
@@ -359,17 +399,16 @@ void SpiDrv::sendParam(uint8_t *param, uint8_t param_len, uint8_t lastParam)
         spiTransfer(END_CMD);
 }
 
-void SpiDrv::sendBufferLen16(uint16_t *param, uint8_t param_len, uint8_t lastParam)
+void SpiDrv::sendBufferLen16(uint8_t *param, uint16_t param_len, uint8_t lastParam)
 {
     int i = 0;
     // Send Spi paramLen
-    sendParamLen16(param_len * 2);
+    sendParamLen16(param_len);
 
     // Send Spi param data
     for (i = 0; i < param_len; ++i)
     {
-        spiTransfer(param[i * 2] & 0xff);
-        spiTransfer((param[i * 2] >> 8) & 0xff);
+        spiTransfer(param[i]);
     }
 
     // if lastParam==1 Send Spi END CMD

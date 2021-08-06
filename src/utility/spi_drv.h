@@ -107,6 +107,8 @@ public:
 
   static int waitResponseParams(uint8_t cmd, uint8_t numParam, tParam *params);
 
+  static int waitResponseDataParams(uint8_t cmd, uint8_t numParam, tDataParam *params);
+
   static int waitResponseCmd(uint8_t cmd, uint8_t numParam, uint8_t *param, uint8_t *param_len);
 
   static int waitResponseData8(uint8_t cmd, uint8_t *param, uint8_t *param_len);
@@ -120,7 +122,7 @@ public:
 
   static void sendParam(uint8_t *param, uint8_t param_len, uint8_t lastParam = NO_LAST_PARAM);
 
-  static void sendBufferLen16(uint16_t* param, uint8_t param_len, uint8_t lastParam = NO_LAST_PARAM);
+  static void sendBufferLen16(uint8_t* param, uint16_t param_len, uint8_t lastParam = NO_LAST_PARAM);
 
   static void sendParamNoLen(uint8_t *param, size_t param_len, uint8_t lastParam = NO_LAST_PARAM);
 
